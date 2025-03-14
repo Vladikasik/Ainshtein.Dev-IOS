@@ -1,19 +1,24 @@
 import React from 'react';
 import { 
   View, 
-  Text, 
   StyleSheet, 
   SafeAreaView, 
   ScrollView, 
   TouchableOpacity, 
   Linking,
   Alert,
-  Clipboard
+  Clipboard,
+  Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import GlitchText from '../components/GlitchText';
+import GlitchContainer from '../components/GlitchContainer';
+import NeonButton from '../components/NeonButton';
+import FlyingMoneyEmojis from '../components/FlyingMoneyEmojis';
+import { devTheme, neonGlow } from '../utils/devTheme';
 
 const ContactsDonationsScreen: React.FC = () => {
-  const donationAddress = 'Your_Donation_Address_Here';
+  const donationAddress = 'CLcj8RiEtay5fyoJJigx4AP5UvcM2Hr64DFubkQVT7Bi';
 
   const copyToClipboard = (text: string, message: string) => {
     Clipboard.setString(text);
@@ -31,93 +36,140 @@ const ContactsDonationsScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Flying money emoji background */}
+      <FlyingMoneyEmojis count={20} generationInterval={800} />
+      
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Contact Us</Text>
+        <GlitchText 
+          text="CONNECT & SUPPORT" 
+          style={styles.headerText}
+          intensity="medium"
+        />
+        
+        <GlitchContainer style={styles.sectionContainer} intensity="low">
+          <GlitchText text="CONTACT US" style={styles.sectionTitle} />
           
           <TouchableOpacity 
             style={styles.contactItem} 
             onPress={() => openLink('mailto:contact@ainshtein.dev')}
           >
-            <Ionicons name="mail-outline" size={24} color="#FF9500" />
-            <Text style={styles.contactText}>contact@ainshtein.dev</Text>
+            <Ionicons name="mail-outline" size={24} color={devTheme.neonGreen} />
+            <GlitchText 
+              text="contact@ainshtein.dev" 
+              style={styles.contactText} 
+              intensity="low"
+            />
           </TouchableOpacity>
           
           <TouchableOpacity 
             style={styles.contactItem} 
             onPress={() => openLink('https://twitter.com/ainshtein_dev')}
           >
-            <Ionicons name="logo-twitter" size={24} color="#1DA1F2" />
-            <Text style={styles.contactText}>@ainshtein_dev</Text>
+            <Ionicons name="logo-twitter" size={24} color={devTheme.glitchBlue} />
+            <GlitchText 
+              text="@ainshtein_dev" 
+              style={styles.contactText} 
+              intensity="low"
+            />
           </TouchableOpacity>
           
           <TouchableOpacity 
             style={styles.contactItem} 
             onPress={() => openLink('https://discord.gg/ainshtein')}
           >
-            <Ionicons name="logo-discord" size={24} color="#5865F2" />
-            <Text style={styles.contactText}>Join our Discord</Text>
+            <Ionicons name="logo-discord" size={24} color={devTheme.glitchPurple} />
+            <GlitchText 
+              text="Join our Discord" 
+              style={styles.contactText}
+              intensity="low" 
+            />
           </TouchableOpacity>
           
           <TouchableOpacity 
             style={styles.contactItem} 
             onPress={() => openLink('https://ainshtein.dev')}
           >
-            <Ionicons name="globe-outline" size={24} color="#4CD964" />
-            <Text style={styles.contactText}>ainshtein.dev</Text>
+            <Ionicons name="globe-outline" size={24} color={devTheme.limeGreen} />
+            <GlitchText 
+              text="ainshtein.dev" 
+              style={styles.contactText}
+              intensity="low" 
+            />
           </TouchableOpacity>
-        </View>
+        </GlitchContainer>
         
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Support Development</Text>
+        <GlitchContainer style={styles.sectionContainer} intensity="low">
+          <GlitchText text="SUPPORT DEVELOPMENT" style={styles.sectionTitle} />
           
-          <Text style={styles.donationDescription}>
-            If you find this app useful, please consider supporting our development efforts with a donation.
-          </Text>
+          <GlitchText 
+            text="If you find this app useful, please consider supporting our development efforts with a donation." 
+            style={styles.donationDescription}
+            intensity="low" 
+          />
           
           <View style={styles.donationContainer}>
-            <Text style={styles.donationLabel}>Donation Address (SOL):</Text>
+            <GlitchText 
+              text="Donation Address (SOL):" 
+              style={styles.donationLabel}
+              intensity="low" 
+            />
             <View style={styles.addressRow}>
-              <Text style={styles.donationAddress}>
-                {donationAddress.substring(0, 20)}...
-              </Text>
+              <GlitchText 
+                text={`${donationAddress.substring(0, 12)}...${donationAddress.substring(donationAddress.length - 8)}`}
+                style={styles.donationAddress}
+                intensity="medium" 
+              />
               <TouchableOpacity 
                 onPress={() => copyToClipboard(donationAddress, 'Donation address copied to clipboard!')}
+                style={styles.copyButton}
               >
-                <Ionicons name="copy-outline" size={20} color="#FF9500" />
+                <Ionicons name="copy-outline" size={20} color={devTheme.neonGreen} />
               </TouchableOpacity>
             </View>
           </View>
           
           <View style={styles.supportOptions}>
-            <TouchableOpacity style={styles.supportOption}>
-              <Text style={styles.supportAmount}>5 SOL</Text>
-            </TouchableOpacity>
+            <NeonButton 
+              title="5 SOL" 
+              onPress={() => Alert.alert('DEV MODE', 'Donation feature available in production only')}
+              style={styles.supportOption}
+            />
             
-            <TouchableOpacity style={styles.supportOption}>
-              <Text style={styles.supportAmount}>10 SOL</Text>
-            </TouchableOpacity>
+            <NeonButton 
+              title="10 SOL" 
+              onPress={() => Alert.alert('DEV MODE', 'Donation feature available in production only')}
+              style={styles.supportOption}
+            />
             
-            <TouchableOpacity style={styles.supportOption}>
-              <Text style={styles.supportAmount}>25 SOL</Text>
-            </TouchableOpacity>
+            <NeonButton 
+              title="25 SOL" 
+              onPress={() => Alert.alert('DEV MODE', 'Donation feature available in production only')}
+              style={styles.supportOption}
+            />
             
-            <TouchableOpacity style={styles.supportOption}>
-              <Text style={styles.supportAmount}>Custom</Text>
-            </TouchableOpacity>
+            <NeonButton 
+              title="CUSTOM" 
+              onPress={() => Alert.alert('DEV MODE', 'Donation feature available in production only')}
+              style={styles.supportOption}
+            />
           </View>
-        </View>
+        </GlitchContainer>
         
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>About</Text>
+        <GlitchContainer style={styles.sectionContainer} intensity="low">
+          <GlitchText text="ABOUT" style={styles.sectionTitle} />
           
-          <Text style={styles.aboutText}>
-            Ainshtein.dev is an innovative platform for creating and managing Solana tokens and automated trading bots.
-            Our mission is to make blockchain technology more accessible to everyone.
-          </Text>
+          <GlitchText 
+            text="Ainshtein.dev is an innovative platform for creating and managing Solana tokens and automated trading bots. Our mission is to make blockchain technology more accessible to everyone." 
+            style={styles.aboutText}
+            intensity="low" 
+          />
           
-          <Text style={styles.versionText}>Version 1.0.0</Text>
-        </View>
+          <GlitchText 
+            text="VERSION 0.1.3 [DEV BUILD]" 
+            style={styles.versionText}
+            intensity="high" 
+          />
+        </GlitchContainer>
       </ScrollView>
     </SafeAreaView>
   );
@@ -126,7 +178,7 @@ const ContactsDonationsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: devTheme.darkestBg,
   },
   scrollView: {
     flex: 1,
@@ -135,16 +187,21 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 40,
   },
+  headerText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: devTheme.neonGreen,
+    textAlign: 'center',
+    marginVertical: 20,
+    ...neonGlow.medium
+  },
   sectionContainer: {
-    backgroundColor: '#111',
-    borderRadius: 12,
-    padding: 20,
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: 'white',
+    color: devTheme.neonGreen,
     marginBottom: 20,
   },
   contactItem: {
@@ -152,26 +209,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#222',
+    borderBottomColor: devTheme.darkGreen,
   },
   contactText: {
-    color: 'white',
+    color: devTheme.textPrimary,
     fontSize: 16,
     marginLeft: 16,
   },
   donationDescription: {
-    color: '#CCC',
+    color: devTheme.textSecondary,
     fontSize: 16,
     marginBottom: 20,
   },
   donationContainer: {
-    backgroundColor: '#222',
-    borderRadius: 8,
+    backgroundColor: devTheme.codeBg,
+    borderRadius: 4,
     padding: 16,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: devTheme.darkGreen,
   },
   donationLabel: {
-    color: '#888',
+    color: devTheme.textMuted,
     fontSize: 14,
     marginBottom: 8,
   },
@@ -181,8 +240,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   donationAddress: {
-    color: 'white',
+    color: devTheme.textPrimary,
     fontSize: 16,
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+  },
+  copyButton: {
+    padding: 8,
   },
   supportOptions: {
     flexDirection: 'row',
@@ -190,28 +253,20 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   supportOption: {
-    backgroundColor: '#333',
-    padding: 12,
-    borderRadius: 8,
     width: '48%',
-    alignItems: 'center',
     marginBottom: 10,
   },
-  supportAmount: {
-    color: '#FF9500',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   aboutText: {
-    color: '#CCC',
+    color: devTheme.textSecondary,
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 20,
   },
   versionText: {
-    color: '#666',
+    color: devTheme.textMuted,
     fontSize: 14,
     textAlign: 'center',
+    marginTop: 20,
   },
 });
 

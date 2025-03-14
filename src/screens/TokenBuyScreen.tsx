@@ -17,6 +17,11 @@ import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useWallet } from '../context/WalletContext';
 import { createToken } from '../utils/wallet';
+import GlitchText from '../components/GlitchText';
+import NeonButton from '../components/NeonButton';
+import GlitchContainer from '../components/GlitchContainer';
+import FinancialCharts from '../components/FinancialCharts';
+import { devTheme, neonGlow } from '../utils/devTheme';
 
 const TokenBuyScreen: React.FC = () => {
   const { keypair, loading: walletLoading } = useWallet();
@@ -112,6 +117,13 @@ const TokenBuyScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Background financial charts */}
+      <FinancialCharts 
+        numGrowingCharts={5} 
+        numDumpingCharts={3} 
+        opacity={0.15}
+      />
+      
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoidingView}
@@ -120,11 +132,17 @@ const TokenBuyScreen: React.FC = () => {
           style={styles.scrollView}
           contentContainerStyle={styles.contentContainer}
         >
-          <View style={styles.formContainer}>
-            <Text style={styles.sectionTitle}>Create New Token</Text>
+          <GlitchText 
+            text="TOKEN CREATION" 
+            style={styles.headerText}
+            intensity="medium"
+          />
+          
+          <GlitchContainer style={styles.formContainer} intensity="low">
+            <GlitchText text="CREATE NEW TOKEN" style={styles.sectionTitle} />
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Token Name</Text>
+              <GlitchText text="TOKEN NAME" style={styles.label} intensity="low" />
               <TextInput
                 style={styles.input}
                 value={tokenName}
@@ -135,7 +153,7 @@ const TokenBuyScreen: React.FC = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Token Symbol</Text>
+              <GlitchText text="TOKEN SYMBOL" style={styles.label} intensity="low" />
               <TextInput
                 style={styles.input}
                 value={tokenSymbol}
@@ -148,7 +166,7 @@ const TokenBuyScreen: React.FC = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Description</Text>
+              <GlitchText text="DESCRIPTION" style={styles.label} intensity="low" />
               <TextInput
                 style={[styles.input, styles.textArea]}
                 value={tokenDescription}
@@ -162,7 +180,7 @@ const TokenBuyScreen: React.FC = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Total Supply</Text>
+              <GlitchText text="TOTAL SUPPLY" style={styles.label} intensity="low" />
               <TextInput
                 style={styles.input}
                 value={tokenSupply}
@@ -174,34 +192,51 @@ const TokenBuyScreen: React.FC = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Token Image</Text>
+              <GlitchText text="TOKEN IMAGE" style={styles.label} intensity="low" />
               <TouchableOpacity style={styles.imagePickerButton} onPress={handleImagePick}>
                 {tokenImage ? (
                   <Image source={{ uri: tokenImage }} style={styles.tokenImage} />
                 ) : (
                   <View style={styles.imagePlaceholder}>
-                    <Ionicons name="image-outline" size={30} color="#666" />
-                    <Text style={styles.imagePlaceholderText}>Upload Image</Text>
+                    <Ionicons name="image-outline" size={30} color={devTheme.neonGreen} />
+                    <GlitchText 
+                      text="UPLOAD IMAGE" 
+                      style={styles.imagePlaceholderText} 
+                      intensity="medium" 
+                    />
                   </View>
                 )}
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
-              style={[
-                styles.submitButton,
-                (loading || walletLoading) && styles.disabledButton,
-              ]}
+            <NeonButton
+              title={loading ? "CREATING..." : "CREATE TOKEN"}
               onPress={handleSubmit}
-              disabled={loading || walletLoading}
-            >
-              {loading ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <Text style={styles.submitButtonText}>Create Token</Text>
-              )}
-            </TouchableOpacity>
-          </View>
+              style={styles.submitButton}
+              glitchMode={true}
+              intensity="medium"
+            />
+          </GlitchContainer>
+          
+          <GlitchContainer style={styles.infoContainer} intensity="low">
+            <GlitchText text="TOKEN INFO" style={styles.infoTitle} />
+            <View style={styles.infoItem}>
+              <Ionicons name="information-circle-outline" size={20} color={devTheme.neonGreen} />
+              <GlitchText 
+                text="Creating a token costs 0.01 SOL for transaction fees" 
+                style={styles.infoText}
+                intensity="low" 
+              />
+            </View>
+            <View style={styles.infoItem}>
+              <Ionicons name="warning-outline" size={20} color={devTheme.toxicGreen} />
+              <GlitchText 
+                text="Tokens created in DEV mode are on testnet only" 
+                style={styles.infoText}
+                intensity="medium" 
+              />
+            </View>
+          </GlitchContainer>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -211,7 +246,7 @@ const TokenBuyScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: devTheme.darkestBg,
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -223,16 +258,21 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 40,
   },
+  headerText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: devTheme.neonGreen,
+    textAlign: 'center',
+    marginVertical: 20,
+    ...neonGlow.medium
+  },
   formContainer: {
-    backgroundColor: '#111',
-    borderRadius: 12,
-    padding: 20,
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: 'white',
+    color: devTheme.neonGreen,
     marginBottom: 20,
   },
   inputGroup: {
@@ -240,58 +280,66 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#CCC',
+    color: devTheme.textMuted,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#222',
-    borderRadius: 8,
+    backgroundColor: devTheme.codeBg,
+    borderRadius: 4,
     padding: 12,
-    color: 'white',
-    fontSize: 16,
+    color: devTheme.textPrimary,
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: devTheme.darkGreen,
   },
   textArea: {
-    height: 100,
+    minHeight: 100,
   },
   imagePickerButton: {
-    backgroundColor: '#222',
-    borderRadius: 8,
+    backgroundColor: devTheme.codeBg,
+    borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#333',
-    height: 120,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: devTheme.darkGreen,
     overflow: 'hidden',
-  },
-  imagePlaceholder: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imagePlaceholderText: {
-    color: '#666',
-    marginTop: 8,
   },
   tokenImage: {
     width: '100%',
-    height: '100%',
+    height: 200,
     resizeMode: 'cover',
   },
-  submitButton: {
-    backgroundColor: '#FF9500',
-    borderRadius: 8,
-    padding: 16,
+  imagePlaceholder: {
+    height: 120,
     alignItems: 'center',
+    justifyContent: 'center',
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    borderColor: devTheme.neonGreen,
+  },
+  imagePlaceholderText: {
+    marginTop: 10,
+    color: devTheme.textMuted,
+    fontSize: 14,
+  },
+  submitButton: {
     marginTop: 20,
   },
-  submitButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+  infoContainer: {
+    marginBottom: 20,
   },
-  disabledButton: {
-    opacity: 0.7,
+  infoTitle: {
+    fontSize: 18,
+    color: devTheme.textPrimary,
+    marginBottom: 15,
+  },
+  infoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  infoText: {
+    marginLeft: 10,
+    color: devTheme.textSecondary,
+    fontSize: 14,
   },
 });
 
