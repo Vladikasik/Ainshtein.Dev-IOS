@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import { View, StyleSheet } from 'react-native';
 
 import { RootStackParamList, TabParamList } from './types';
 import WelcomeScreen from '../screens/WelcomeScreen';
@@ -11,9 +12,46 @@ import WalletScreen from '../screens/WalletScreen';
 import TokenBuyScreen from '../screens/TokenBuyScreen';
 import AutomaticBotsScreen from '../screens/AutomaticBotsScreen';
 import ContactsDonationsScreen from '../screens/ContactsDonationsScreen';
+import { devTheme, neonGlow, devFonts } from '../utils/devTheme';
+import GlitchText from '../components/GlitchText';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
+
+// Custom theme
+const DevTheme = {
+  ...DefaultTheme,
+  dark: true,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: devTheme.neonGreen,
+    background: devTheme.darkestBg,
+    card: devTheme.darkBg,
+    text: devTheme.textPrimary,
+    border: devTheme.darkGreen,
+    notification: devTheme.glitchPink,
+  }
+};
+
+// Glitchy tab icon component
+const GlitchyIcon = ({ name, color, size, focused }: { name: any, color: string, size: number, focused: boolean }) => {
+  return (
+    <View style={[
+      styles.iconContainer,
+      focused && styles.focusedIcon
+    ]}>
+      <Ionicons 
+        name={name} 
+        size={size} 
+        color={focused ? devTheme.neonGreen : color} 
+        style={focused ? styles.glowingIcon : {}} 
+      />
+      {focused && (
+        <View style={styles.focusedDot} />
+      )}
+    </View>
+  );
+};
 
 // Main tab navigation component
 const TabNavigator = () => {
@@ -21,60 +59,86 @@ const TabNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: '#000',
-          borderTopColor: '#333',
+          backgroundColor: devTheme.darkestBg,
+          borderTopColor: devTheme.darkGreen,
+          borderTopWidth: 1,
           height: 60,
           paddingBottom: 8,
         },
-        tabBarActiveTintColor: '#FF9500',
-        tabBarInactiveTintColor: '#888',
+        tabBarActiveTintColor: devTheme.neonGreen,
+        tabBarInactiveTintColor: devTheme.textMuted,
         headerStyle: {
-          backgroundColor: '#000000',
+          backgroundColor: devTheme.darkestBg,
+          borderBottomWidth: 1,
+          borderBottomColor: devTheme.darkGreen,
+          elevation: 0,
+          shadowOpacity: 0,
         },
-        headerTintColor: '#fff',
+        headerTintColor: devTheme.neonGreen,
         headerTitleStyle: {
           fontWeight: 'bold',
+          fontFamily: devFonts.monospace,
+          ...neonGlow.small,
         },
+        tabBarItemStyle: {
+          paddingVertical: 5,
+        },
+        tabBarLabelStyle: {
+          fontFamily: devFonts.monospace,
+          fontSize: 10,
+        }
       }}
     >
       <Tab.Screen
         name="Wallet"
         component={WalletScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="wallet-outline" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <GlitchyIcon name="wallet-outline" size={size} color={color} focused={focused} />
           ),
-          title: 'Your Wallet',
+          title: 'YOUR WALLET',
+          headerTitle: () => (
+            <GlitchText text="YOUR WALLET" style={styles.headerTitle} intensity="low" />
+          ),
         }}
       />
       <Tab.Screen
         name="TokenBuy"
         component={TokenBuyScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cash-outline" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <GlitchyIcon name="cash-outline" size={size} color={color} focused={focused} />
           ),
-          title: 'Create Token',
+          title: 'CREATE TOKEN',
+          headerTitle: () => (
+            <GlitchText text="CREATE TOKEN" style={styles.headerTitle} intensity="low" />
+          ),
         }}
       />
       <Tab.Screen
         name="AutomaticBots"
         component={AutomaticBotsScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="hardware-chip-outline" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <GlitchyIcon name="hardware-chip-outline" size={size} color={color} focused={focused} />
           ),
-          title: 'Automatic Bots',
+          title: 'AUTO BOTS',
+          headerTitle: () => (
+            <GlitchText text="AUTOMATIC BOTS" style={styles.headerTitle} intensity="low" />
+          ),
         }}
       />
       <Tab.Screen
         name="ContactsDonations"
         component={ContactsDonationsScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people-outline" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <GlitchyIcon name="people-outline" size={size} color={color} focused={focused} />
           ),
-          title: 'Contacts & Donations',
+          title: 'CONTACTS',
+          headerTitle: () => (
+            <GlitchText text="CONTACTS & DONATIONS" style={styles.headerTitle} intensity="low" />
+          ),
         }}
       />
     </Tab.Navigator>
@@ -115,11 +179,14 @@ const Navigation = () => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={DevTheme}>
       <Stack.Navigator
         initialRouteName={isFirstLaunch ? 'Welcome' : 'Main'}
         screenOptions={{
           headerShown: false,
+          contentStyle: {
+            backgroundColor: devTheme.darkestBg,
+          }
         }}
       >
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
@@ -128,5 +195,38 @@ const Navigation = () => {
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  headerTitle: {
+    fontSize: 18,
+    color: devTheme.neonGreen,
+    fontFamily: devFonts.monospace,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    width: 32,
+    height: 32,
+  },
+  focusedIcon: {
+    backgroundColor: `${devTheme.darkBg}99`,
+    borderRadius: 16,
+  },
+  glowingIcon: {
+    textShadowColor: devTheme.neonGreen,
+    textShadowRadius: 8,
+    textShadowOffset: { width: 0, height: 0 },
+  },
+  focusedDot: {
+    position: 'absolute',
+    bottom: -4,
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: devTheme.neonGreen,
+    ...neonGlow.small,
+  }
+});
 
 export default Navigation; 
