@@ -5,6 +5,7 @@ import {
   ViewStyle,
   Animated,
   LayoutChangeEvent,
+  TouchableOpacity,
 } from 'react-native';
 import { devTheme, neonGlow, devBorders } from '../utils/devTheme';
 
@@ -14,6 +15,7 @@ interface GlitchContainerProps {
   intensity?: 'low' | 'medium' | 'high';
   neonEffect?: boolean;
   scanlines?: boolean;
+  onPress?: () => void;
 }
 
 const GlitchContainer: React.FC<GlitchContainerProps> = ({
@@ -22,6 +24,7 @@ const GlitchContainer: React.FC<GlitchContainerProps> = ({
   intensity = 'medium',
   neonEffect = true,
   scanlines = true,
+  onPress,
 }) => {
   // Animations
   const glitchOffsetX = useRef(new Animated.Value(0)).current;
@@ -128,23 +131,15 @@ const GlitchContainer: React.FC<GlitchContainerProps> = ({
     ]).start();
   };
   
-  return (
-    <Animated.View
-      style={[
-        styles.container,
-        neonEffect && neonGlow.small,
-        { 
-          borderColor: devTheme.neonGreen,
-          borderWidth: Animated.multiply(borderFlickerAnim, 1).interpolate({
-            inputRange: [0, 1],
-            outputRange: [0.5, 1],
-          }),
-        },
-        { transform: [{ translateX: glitchOffsetX }] },
-        style,
-      ]}
-      onLayout={onLayout}
-    >
+  const handlePress = () => {
+    if (onPress) {
+      triggerGlitch();
+      onPress();
+    }
+  };
+  
+  const containerContent = (
+    <>
       {children}
       
       {/* Glitch overlay */}
@@ -173,6 +168,42 @@ const GlitchContainer: React.FC<GlitchContainerProps> = ({
           />
         </View>
       )}
+    </>
+  );
+  
+  const containerStyles = [
+    styles.container,
+    neonEffect && neonGlow.small,
+    { 
+      borderColor: devTheme.neonGreen,
+      borderWidth: Animated.multiply(borderFlickerAnim, 1).interpolate({
+        inputRange: [0, 1],
+        outputRange: [0.5, 1],
+      }),
+    },
+    { transform: [{ translateX: glitchOffsetX }] },
+    style,
+  ];
+  
+  if (onPress) {
+    return (
+      <TouchableOpacity activeOpacity={0.8} onPress={handlePress}>
+        <Animated.View
+          style={containerStyles}
+          onLayout={onLayout}
+        >
+          {containerContent}
+        </Animated.View>
+      </TouchableOpacity>
+    );
+  }
+  
+  return (
+    <Animated.View
+      style={containerStyles}
+      onLayout={onLayout}
+    >
+      {containerContent}
     </Animated.View>
   );
 };

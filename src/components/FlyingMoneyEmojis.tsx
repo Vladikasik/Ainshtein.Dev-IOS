@@ -26,7 +26,6 @@ interface MoneyEmojiProps {
   delay: number;
   rotateDirection: 'clockwise' | 'counterclockwise';
   rotateSpeed: number;
-  pulseSpeed: number;
 }
 
 const MoneyEmoji: React.FC<MoneyEmojiProps> = ({
@@ -38,12 +37,10 @@ const MoneyEmoji: React.FC<MoneyEmojiProps> = ({
   delay,
   rotateDirection,
   rotateSpeed,
-  pulseSpeed,
 }) => {
   const posX = useRef(new Animated.Value(startX)).current;
   const posY = useRef(new Animated.Value(startY)).current;
   const rotation = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(1)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -84,22 +81,6 @@ const MoneyEmoji: React.FC<MoneyEmojiProps> = ({
       })
     ).start();
     
-    // Pulse animation
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(scale, {
-          toValue: 1.2,
-          duration: pulseSpeed,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scale, {
-          toValue: 0.9,
-          duration: pulseSpeed,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-    
     // Fade out at the end
     Animated.timing(opacity, {
       toValue: 0,
@@ -112,7 +93,6 @@ const MoneyEmoji: React.FC<MoneyEmojiProps> = ({
       posX.stopAnimation();
       posY.stopAnimation();
       rotation.stopAnimation();
-      scale.stopAnimation();
       opacity.stopAnimation();
     };
   }, []);
@@ -130,7 +110,6 @@ const MoneyEmoji: React.FC<MoneyEmojiProps> = ({
           { translateX: posX },
           { translateY: posY },
           { rotate: spin },
-          { scale },
         ],
         opacity,
       }}
@@ -184,7 +163,6 @@ const FlyingMoneyEmojis: React.FC<FlyingMoneyEmojisProps> = ({
     const delay = getRandomNumber(0, 2000);
     const rotateDirection = Math.random() > 0.5 ? 'clockwise' : 'counterclockwise';
     const rotateSpeed = getRandomNumber(3000, 8000);
-    const pulseSpeed = getRandomNumber(1000, 2000);
     
     return (
       <MoneyEmoji 
@@ -197,7 +175,6 @@ const FlyingMoneyEmojis: React.FC<FlyingMoneyEmojisProps> = ({
         delay={delay}
         rotateDirection={rotateDirection}
         rotateSpeed={rotateSpeed}
-        pulseSpeed={pulseSpeed}
       />
     );
   };

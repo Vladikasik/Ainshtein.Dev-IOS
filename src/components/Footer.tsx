@@ -55,10 +55,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 8,
     borderTopWidth: 1,
     borderTopColor: devTheme.neonGreen,
-    paddingBottom: Platform.OS === 'ios' ? 35 : 10, // Extra padding on iOS to avoid home indicator
+    paddingBottom: Platform.OS === 'ios' ? 20 : 8, // Reduced padding on iOS
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -70,14 +70,14 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 10,
     // Semi-transparent backdrop
-    backgroundColor: `${devTheme.darkestBg}CC`,
+    backgroundColor: `${devTheme.darkestBg}DD`,
     // Glass effect
     backdropFilter: 'blur(10px)',
   },
   footerButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
+    padding: 8, // Slightly reduced padding
     // Add glow effect
     ...neonGlow.small,
   },

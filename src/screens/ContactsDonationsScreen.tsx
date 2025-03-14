@@ -128,31 +128,13 @@ const ContactsDonationsScreen: React.FC = () => {
             </View>
           </View>
           
-          <View style={styles.supportOptions}>
-            <NeonButton 
-              title="5 SOL" 
-              onPress={() => Alert.alert('DEV MODE', 'Donation feature available in production only')}
-              style={styles.supportOption}
-            />
-            
-            <NeonButton 
-              title="10 SOL" 
-              onPress={() => Alert.alert('DEV MODE', 'Donation feature available in production only')}
-              style={styles.supportOption}
-            />
-            
-            <NeonButton 
-              title="25 SOL" 
-              onPress={() => Alert.alert('DEV MODE', 'Donation feature available in production only')}
-              style={styles.supportOption}
-            />
-            
-            <NeonButton 
-              title="CUSTOM" 
-              onPress={() => Alert.alert('DEV MODE', 'Donation feature available in production only')}
-              style={styles.supportOption}
-            />
-          </View>
+          <NeonButton
+            title="COPY DONATION ADDRESS"
+            onPress={() => copyToClipboard(donationAddress, 'Donation address copied to clipboard!')}
+            style={styles.fullWidthButton}
+            glitchMode={true}
+            intensity="medium"
+          />
         </GlitchContainer>
         
         <GlitchContainer style={styles.sectionContainer} intensity="low">
@@ -185,7 +167,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 80, // Extra padding for footer
   },
   headerText: {
     fontSize: 28,
@@ -197,6 +179,9 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: devTheme.darkGreen,
+    padding: 16,
   },
   sectionTitle: {
     fontSize: 22,
@@ -247,14 +232,9 @@ const styles = StyleSheet.create({
   copyButton: {
     padding: 8,
   },
-  supportOptions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-  },
-  supportOption: {
-    width: '48%',
-    marginBottom: 10,
+  fullWidthButton: {
+    width: '100%',
+    marginTop: 10,
   },
   aboutText: {
     color: devTheme.textSecondary,
