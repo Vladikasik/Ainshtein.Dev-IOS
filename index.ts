@@ -1,10 +1,6 @@
 // Import polyfills before anything else
-import 'react-native-get-random-values';
-import { Buffer } from 'buffer';
+import './src/utils/global-polyfills';
 import { registerRootComponent } from 'expo';
-
-// Make sure crypto and Buffer are globally available
-global.Buffer = Buffer;
 
 // Now import the app
 import App from './App';

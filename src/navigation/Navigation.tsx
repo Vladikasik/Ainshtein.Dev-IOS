@@ -12,9 +12,11 @@ import WalletScreen from '../screens/WalletScreen';
 import TokenBuyScreen from '../screens/TokenBuyScreen';
 import AutomaticBotsScreen from '../screens/AutomaticBotsScreen';
 import ContactsDonationsScreen from '../screens/ContactsDonationsScreen';
+import WalletImportScreen from '../screens/WalletImportScreen';
 import { devTheme, neonGlow, devFonts } from '../utils/devTheme';
 import GlitchText from '../components/GlitchText';
 import ScreenBackground from '../components/ScreenBackground';
+import { useWallet } from '../context/WalletContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -161,6 +163,7 @@ const TabNavigator = () => {
 // Root navigation
 const Navigation = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
+  const { isWalletImported, loading } = useWallet();
   
   useEffect(() => {
     // Check if it's the first launch
@@ -186,16 +189,25 @@ const Navigation = () => {
     checkFirstLaunch();
   }, []);
 
-  // Wait until we know if it's the first launch
-  if (isFirstLaunch === null) {
+  // Wait until we know if it's the first launch and until wallet check is complete
+  if (isFirstLaunch === null || loading) {
     return null; // Or a loading indicator
+  }
+
+  // Determine initial route
+  let initialRoute: keyof RootStackParamList = 'MainTabs';
+  
+  if (isFirstLaunch) {
+    initialRoute = 'Welcome';
+  } else if (!isWalletImported) {
+    initialRoute = 'ImportWallet';
   }
 
   return (
     <NavigationContainer theme={DevTheme}>
       <ScreenBackground>
         <Stack.Navigator
-          initialRouteName={isFirstLaunch ? "Welcome" : "MainTabs"}
+          initialRouteName={initialRoute}
           screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: 'transparent' },
@@ -204,6 +216,9 @@ const Navigation = () => {
         >
           {isFirstLaunch && (
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          )}
+          {!isWalletImported && !isFirstLaunch && (
+            <Stack.Screen name="ImportWallet" component={WalletImportScreen} />
           )}
           <Stack.Screen name="MainTabs" component={TabNavigator} />
         </Stack.Navigator>

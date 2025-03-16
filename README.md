@@ -2,6 +2,8 @@
 
 A mobile app for managing Solana wallets and creating tokens.
 
+**Current Version: v0.1.0**
+
 ## Features
 
 - Display wallet information from Solana blockchain
