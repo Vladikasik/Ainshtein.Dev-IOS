@@ -12,7 +12,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import GlitchText from '../components/GlitchText';
 import NeonButton from '../components/NeonButton';
-import MatrixRain from '../components/MatrixRain';
 import { devTheme, neonGlow } from '../utils/devTheme';
 import { RootStackParamList } from '../navigation/types';
 
@@ -93,14 +92,11 @@ const WelcomeScreen: React.FC = () => {
   // Handle enter button press
   const handleEnter = () => {
     Vibration.vibrate([0, 30, 50, 30]);
-    navigation.navigate('Main');
+    navigation.navigate('MainTabs');
   };
   
   return (
     <View style={styles.container}>
-      {/* Matrix background animation */}
-      <MatrixRain opacity={0.2} />
-      
       {/* Loading sequence */}
       {!showContent && (
         <View style={styles.bootScreen}>
@@ -178,7 +174,7 @@ const WelcomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: devTheme.darkestBg,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -14,6 +14,7 @@ import AutomaticBotsScreen from '../screens/AutomaticBotsScreen';
 import ContactsDonationsScreen from '../screens/ContactsDonationsScreen';
 import { devTheme, neonGlow, devFonts } from '../utils/devTheme';
 import GlitchText from '../components/GlitchText';
+import ScreenBackground from '../components/ScreenBackground';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -25,7 +26,7 @@ const DevTheme = {
   colors: {
     ...DefaultTheme.colors,
     primary: devTheme.neonGreen,
-    background: devTheme.darkestBg,
+    background: 'transparent',
     card: devTheme.darkBg,
     text: devTheme.textPrimary,
     border: devTheme.darkGreen,
@@ -64,11 +65,23 @@ const TabNavigator = () => {
           borderTopWidth: 1,
           height: 60,
           paddingBottom: 8,
+          position: 'absolute',
+          bottom: 16,
+          left: 16,
+          right: 16,
+          borderRadius: 8,
+          borderColor: devTheme.darkGreen,
+          borderWidth: 1,
+          shadowColor: 'transparent',
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0,
+          shadowRadius: 0,
+          elevation: 0,
         },
         tabBarActiveTintColor: devTheme.neonGreen,
         tabBarInactiveTintColor: devTheme.textMuted,
         headerStyle: {
-          backgroundColor: devTheme.darkestBg,
+          backgroundColor: 'transparent',
           borderBottomWidth: 1,
           borderBottomColor: devTheme.darkGreen,
           elevation: 0,
@@ -180,18 +193,21 @@ const Navigation = () => {
 
   return (
     <NavigationContainer theme={DevTheme}>
-      <Stack.Navigator
-        initialRouteName={isFirstLaunch ? 'Welcome' : 'Main'}
-        screenOptions={{
-          headerShown: false,
-          contentStyle: {
-            backgroundColor: devTheme.darkestBg,
-          }
-        }}
-      >
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Main" component={TabNavigator} />
-      </Stack.Navigator>
+      <ScreenBackground>
+        <Stack.Navigator
+          initialRouteName={isFirstLaunch ? "Welcome" : "MainTabs"}
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: 'transparent' },
+            animation: 'slide_from_right'
+          }}
+        >
+          {isFirstLaunch && (
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          )}
+          <Stack.Screen name="MainTabs" component={TabNavigator} />
+        </Stack.Navigator>
+      </ScreenBackground>
     </NavigationContainer>
   );
 };

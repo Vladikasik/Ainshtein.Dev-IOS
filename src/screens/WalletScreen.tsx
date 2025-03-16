@@ -17,7 +17,6 @@ import GlitchText from '../components/GlitchText';
 import NeonButton from '../components/NeonButton';
 import GlitchContainer from '../components/GlitchContainer';
 import HackerTerminal from '../components/HackerTerminal';
-import MatrixRain from '../components/MatrixRain';
 import { devTheme, neonGlow } from '../utils/devTheme';
 
 const WalletScreen: React.FC = () => {
@@ -45,9 +44,6 @@ const WalletScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Matrix rain background effect */}
-      <MatrixRain opacity={0.07} />
-      
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -133,14 +129,15 @@ const WalletScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: devTheme.darkestBg,
+    backgroundColor: 'transparent',
   },
   scrollView: {
     flex: 1,
+    backgroundColor: 'transparent',
   },
   contentContainer: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 130,
   },
   headerText: {
     fontSize: 28,

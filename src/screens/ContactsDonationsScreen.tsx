@@ -14,7 +14,6 @@ import { Ionicons } from '@expo/vector-icons';
 import GlitchText from '../components/GlitchText';
 import GlitchContainer from '../components/GlitchContainer';
 import NeonButton from '../components/NeonButton';
-import FlyingMoneyEmojis from '../components/FlyingMoneyEmojis';
 import { devTheme, neonGlow } from '../utils/devTheme';
 
 const ContactsDonationsScreen: React.FC = () => {
@@ -36,9 +35,6 @@ const ContactsDonationsScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Flying money emoji background */}
-      <FlyingMoneyEmojis count={20} generationInterval={800} />
-      
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
         <GlitchText 
           text="CONNECT & SUPPORT" 
@@ -160,14 +156,15 @@ const ContactsDonationsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: devTheme.darkestBg,
+    backgroundColor: 'transparent',
   },
   scrollView: {
     flex: 1,
+    backgroundColor: 'transparent',
   },
   contentContainer: {
     padding: 20,
-    paddingBottom: 80, // Extra padding for footer
+    paddingBottom: 130, // Increased bottom padding for floating tab bar
   },
   headerText: {
     fontSize: 28,

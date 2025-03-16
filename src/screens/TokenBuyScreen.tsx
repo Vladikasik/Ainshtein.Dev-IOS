@@ -117,13 +117,6 @@ const TokenBuyScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Background financial charts */}
-      <FinancialCharts 
-        numGrowingCharts={5} 
-        numDumpingCharts={3} 
-        opacity={0.15}
-      />
-      
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoidingView}
@@ -246,17 +239,19 @@ const TokenBuyScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: devTheme.darkestBg,
+    backgroundColor: 'transparent',
   },
   keyboardAvoidingView: {
     flex: 1,
+    backgroundColor: 'transparent',
   },
   scrollView: {
     flex: 1,
+    backgroundColor: 'transparent',
   },
   contentContainer: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 130,
   },
   headerText: {
     fontSize: 28,
