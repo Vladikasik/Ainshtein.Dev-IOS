@@ -1,6 +1,7 @@
 export type RootStackParamList = {
   Welcome: undefined;
   MainTabs: undefined;
+  ImportWallet: undefined;
 };
 
 export type TabParamList = {

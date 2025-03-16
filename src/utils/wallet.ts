@@ -45,12 +45,15 @@ export const getWalletKeypair = async () => {
 };
 
 // Get wallet balance
-export const getWalletBalance = async (pubkey: web3.PublicKey) => {
+export const getWalletBalance = async (pubkey: web3.PublicKey | string) => {
   try {
-    console.log('Getting balance for pubkey:', pubkey.toString());
+    // Convert string to PublicKey if needed
+    const publicKey = typeof pubkey === 'string' ? new web3.PublicKey(pubkey) : pubkey;
+    
+    console.log('Getting balance for pubkey:', publicKey.toString());
     const connection = getConnection();
     console.log('Connection established, fetching balance...');
-    const balance = await connection.getBalance(pubkey);
+    const balance = await connection.getBalance(publicKey);
     console.log('Raw balance (lamports):', balance);
     return balance / web3.LAMPORTS_PER_SOL; // Convert lamports to SOL
   } catch (error) {

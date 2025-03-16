@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   View, 
   StyleSheet, 
@@ -12,17 +12,93 @@ import {
   Alert
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { useWallet } from '../context/WalletContext';
 import GlitchText from '../components/GlitchText';
 import NeonButton from '../components/NeonButton';
 import GlitchContainer from '../components/GlitchContainer';
 import HackerTerminal from '../components/HackerTerminal';
 import { devTheme, neonGlow } from '../utils/devTheme';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/types';
+
+type WalletScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'MainTabs'
+>;
 
 const WalletScreen: React.FC = () => {
-  const { publicKey, balance, loading, error, refreshWallet } = useWallet();
+  const navigation = useNavigation<WalletScreenNavigationProp>();
+  const { publicKey, balance, loading, error, refreshWallet, logout } = useWallet();
   const [refreshing, setRefreshing] = useState(false);
-
+  
+  // Secret reset functionality
+  const [titleClicks, setTitleClicks] = useState(0);
+  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Handle title clicks for secret reset
+  const handleTitleClick = () => {
+    // Increment click counter
+    setTitleClicks(prev => prev + 1);
+    
+    // Reset counter after 2 seconds of inactivity
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current);
+    }
+    
+    clickTimerRef.current = setTimeout(() => {
+      setTitleClicks(0);
+    }, 2000);
+  };
+  
+  // Check if we've reached 5 clicks
+  useEffect(() => {
+    if (titleClicks >= 5) {
+      // Show confirmation
+      Alert.alert(
+        'Reset Wallet',
+        'Are you sure you want to delete all wallet data? This cannot be undone.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+            onPress: () => setTitleClicks(0)
+          },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                await logout();
+                // Navigate back to import screen - fixed approach
+                // Instead of reset, use replace to navigate to root, which will
+                // automatically direct to ImportWallet due to isWalletImported being false
+                navigation.navigate('MainTabs');
+                // The Navigation component will handle redirecting to ImportWallet
+                // since isWalletImported is now false
+              } catch (err) {
+                console.error('Error resetting wallet:', err);
+                Alert.alert('Error', 'Failed to reset wallet');
+              }
+            }
+          }
+        ]
+      );
+      
+      // Reset clicks
+      setTitleClicks(0);
+    }
+  }, [titleClicks, logout, navigation]);
+  
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (clickTimerRef.current) {
+        clearTimeout(clickTimerRef.current);
+      }
+    };
+  }, []);
+  
   const handleRefresh = async () => {
     setRefreshing(true);
     await refreshWallet();
@@ -55,7 +131,12 @@ const WalletScreen: React.FC = () => {
         />
         
         <GlitchContainer style={styles.walletContainer} intensity="low">
-          <GlitchText text="YOUR WALLET" style={styles.sectionTitle} />
+          <TouchableOpacity 
+            onPress={handleTitleClick}
+            activeOpacity={0.8}
+          >
+            <GlitchText text="YOUR WALLET" style={styles.sectionTitle} />
+          </TouchableOpacity>
           
           {loading ? (
             <ActivityIndicator size="large" color={devTheme.neonGreen} />
